@@ -26,7 +26,7 @@ namespace LibraryManagement
             if (book1 == null)
                 bookList.Add(b);
             else
-                throw new Exception("Book already exist");
+                throw new Exception("Book already exists");
 
             return bookList;
         }
@@ -35,37 +35,43 @@ namespace LibraryManagement
             Book book1 = FindBook(b.id);
             if (book1 != null)
                 bookList.Remove(b);
-            else
-                throw new Exception("Book doesnt exist");
+            else if(book1 == null)
+                throw new Exception("Book does not exist");
             
             return "Book removed!";
         }
 
-        public string IssueBook(Book b, User u)
+        public string IssueBook(Book b, User user)
         {
-            foreach (var i in bookList)
+            Book book1 = FindBook(b.id);
+            if (book1 == null)
             {
+                throw new Exception("Book does not exist");
+            }
+            foreach (var i in bookList)
+            {                
                 if (i.title.Equals(b.title) && i.check())
                 {
                     i.setUser(true);
-                    bookList.Remove(i);
-                    bookList.Add(i);
-                    u.subscribe(i);
+                    user.subscribe(i);
 
                 }
             }
             return "Book issued!";
         }
-        public string ReturnBook(Book b, User u)
+        public string ReturnBook(Book b, User user)
         {
+            Book book1 = FindBook(b.id);
+            if (book1 == null)
+            {
+                throw new Exception("Book does not exist");
+            }
             foreach (var i in bookList)
             {
                 if (i.title.Equals(b.title))
                 {
                     i.setUser(false);
-                    bookList.Remove(i);
-                    bookList.Add(i);
-                    u.unsubscribe(i);
+                    user.unsubscribe(i);
                 }
             }
             return "Book returned!";
